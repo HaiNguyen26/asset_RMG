@@ -1,0 +1,147 @@
+generator client {
+  provider = "prisma-client-js"
+  output   = "../node_modules/.prisma/client"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+// Seed configuration
+// Run with: npx prisma db seed
+
+model Department {
+  id   String @id @default(cuid())
+  code String @unique
+  name String
+  assets Asset[]
+  users User[]
+}
+
+model AssetCategory {
+  id          String   @id @default(cuid())
+  slug        String   @unique
+  name        String
+  description String?
+  assets      Asset[]
+}
+
+model User {
+  id            String   @id @default(cuid())
+  employeesCode String   @unique @map("employees_code")
+  password      String?  @map("password")
+  name          String
+  email         String?  @unique
+  branch        String?  @map("branch")
+  departmentId String?
+  department    Department? @relation(fields: [departmentId], references: [id], onDelete: SetNull)
+  role          UserRole @default(USER)
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+  assignedAssets Asset[]
+  createdRepairs RepairHistory[] @relation("RepairHistoryCreatedBy")
+  updatedPolicies Policy[]
+
+  @@map("users")
+}
+
+model Asset {
+  id             String        @id @default(cuid())
+  code            String        @unique @map("asset_code")
+  name            String        @map("asset_name")
+  model           String?
+  serialNumber    String?       @map("serial_number")
+  specification   String?       @map("specification")
+  employeesCode   String?       @map("employees_code")
+  assignedTo      String?       @map("assigned_to")
+  assignedUserId  String?
+  assignedUser    User?         @relation(fields: [assignedUserId], references: [id], onDelete: SetNull)
+  departmentId   String?
+  department      Department?   @relation(fields: [departmentId], references: [id], onDelete: SetNull)
+  inspectionDate  DateTime?     @map("inspection_date")
+  status          AssetStatus   @default(AVAILABLE)
+  note            String?       @map("note")
+  categoryId      String
+  category        AssetCategory @relation(fields: [categoryId], references: [id], onDelete: Cascade)
+  createdAt       DateTime      @default(now())
+  updatedAt       DateTime      @updatedAt
+  assignments     Assignment[]
+  repairHistory   RepairHistory[]
+
+  @@index([categoryId])
+  @@index([status])
+  @@index([departmentId])
+  @@index([employeesCode])
+  @@index([assignedUserId])
+  @@map("assets")
+}
+
+model Assignment {
+  id         String   @id @default(cuid())
+  assetId    String
+  asset      Asset    @relation(fields: [assetId], references: [id], onDelete: Cascade)
+  assignedTo String
+  assignedAt DateTime @default(now())
+  returnedAt DateTime?
+}
+
+enum AssetStatus {
+  AVAILABLE
+  IN_USE
+  MAINTENANCE
+  RETIRED
+}
+
+enum UserRole {
+  ADMIN
+  USER
+}
+
+model RepairHistory {
+  id            String        @id @default(cuid())
+  assetId       String
+  asset         Asset         @relation(fields: [assetId], references: [id], onDelete: Cascade)
+  errorDate     DateTime      @map("error_date")
+  description   String        @map("description")
+  repairType    RepairType    @map("repair_type")
+  repairUnit    String?       @map("repair_unit")
+  result        String?       @map("result")
+  status        RepairStatus  @default(IN_PROGRESS)
+  itNote        String?       @map("it_note")
+  createdAt     DateTime      @default(now()) @map("created_at")
+  updatedAt     DateTime      @updatedAt @map("updated_at")
+  createdById   String?       @map("created_by_id")
+  createdBy     User?         @relation("RepairHistoryCreatedBy", fields: [createdById], references: [id], onDelete: SetNull)
+
+  @@index([assetId])
+  @@index([errorDate])
+  @@index([status])
+  @@map("repair_history")
+}
+
+enum RepairType {
+  INTERNAL_IT
+  EXTERNAL_VENDOR
+}
+
+enum RepairStatus {
+  IN_PROGRESS
+  COMPLETED
+  CANCELLED
+}
+
+model Policy {
+  id          String   @id @default(cuid())
+  category    String   @unique
+  title       String
+  content     String   @db.Text
+  order       Int      @default(0)
+  createdAt   DateTime @default(now()) @map("created_at")
+  updatedAt   DateTime @updatedAt @map("updated_at")
+  updatedById String?  @map("updated_by_id")
+  updatedBy   User?    @relation(fields: [updatedById], references: [id], onDelete: SetNull)
+
+  @@index([category])
+  @@index([order])
+  @@map("policies")
+}
