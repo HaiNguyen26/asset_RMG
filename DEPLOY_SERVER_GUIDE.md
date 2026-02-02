@@ -76,10 +76,36 @@ ALTER DEFAULT PRIVILEGES IN SCHEMA public GRANT ALL ON SEQUENCES TO asset_user;
 
 ## ⚙️ BƯỚC 4: Setup Backend
 
+### 4.0. Kiểm tra và Upgrade Node.js (QUAN TRỌNG!)
+
+**Prisma yêu cầu Node.js >= 20.19**
+
+```bash
+# Kiểm tra Node.js version hiện tại
+node --version
+
+# Nếu version < 20.19, upgrade Node.js:
+# Xóa Node.js cũ
+apt-get remove -y nodejs npm
+
+# Cài đặt Node.js 20.x LTS
+curl -fsSL https://deb.nodesource.com/setup_20.x | bash -
+apt-get install -y nodejs
+
+# Kiểm tra lại
+node --version
+npm --version
+```
+
+**Kết quả mong đợi**: `node --version` phải >= v20.19.0
+
 ### 4.1. Cài đặt dependencies
 
 ```bash
 cd /var/www/asset-rmg/backend
+
+# Xóa node_modules cũ nếu có
+rm -rf node_modules package-lock.json
 
 # Cài đặt npm packages
 npm install
