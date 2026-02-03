@@ -30,7 +30,15 @@ export function ImportExcel({ categoryId, onSuccess }: ImportExcelProps) {
       setSuccess('')
       setErrorDetails([])
 
-      const result = await api.importExcel(file, categoryId)
+      // Map categoryId slug to actual category ID
+      let actualCategoryId: string | undefined
+      if (categoryId) {
+        const categories = await api.getCategories()
+        const category = categories.find((c) => c.slug === categoryId)
+        actualCategoryId = category?.id || categoryId // Fallback to slug if not found
+      }
+
+      const result = await api.importExcel(file, actualCategoryId)
       
       if (result.errorDetails && result.errorDetails.length > 0) {
         setErrorDetails(result.errorDetails)

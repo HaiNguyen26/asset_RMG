@@ -400,13 +400,21 @@ export class AssetsService {
           } else if (defaultCategory) {
             // If no category column but default category provided, use it
             categoryId = defaultCategory
+          } else if (defaultCategory) {
+            // If no category column but default category provided, use it
+            categoryId = defaultCategory
           } else {
-            // No category column and no default category
-            errors.push({ 
-              row: i + 2, 
-              error: `Không tìm thấy cột "Loại". Các cột có sẵn: ${availableColumns.slice(0, 10).join(', ')}${availableColumns.length > 10 ? '...' : ''}. Vui lòng thêm cột "Loại" hoặc import từ trang category cụ thể.` 
-            })
-            continue
+            // No category column and no default category - try to use first available category as fallback
+            if (categories.length > 0) {
+              categoryId = categories[0].id
+              console.log(`⚠️  Không có cột "Loại" và không có defaultCategory, sử dụng category đầu tiên: ${categories[0].name}`)
+            } else {
+              errors.push({ 
+                row: i + 2, 
+                error: `Không tìm thấy cột "Loại" và không có category nào trong hệ thống. Các cột có sẵn: ${availableColumns.slice(0, 10).join(', ')}${availableColumns.length > 10 ? '...' : ''}. Vui lòng thêm cột "Loại" hoặc import từ trang category cụ thể.` 
+              })
+              continue
+            }
           }
 
           // Get code and name (required fields) - prioritize exact column names from Excel
