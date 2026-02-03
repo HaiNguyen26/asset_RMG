@@ -74,10 +74,10 @@ echo "=========================================="
 echo "📊 TÓM TẮT:"
 echo "=========================================="
 
-PM2_RUNNING=$(pm2 list | grep -q "asset-rmg-api.*online" && echo "YES" || echo "NO")
-BACKEND_OK=$(curl -s -o /dev/null -w "%{http_code}" http://localhost:4001/api/departments | grep -q "200" && echo "YES" || echo "NO")
+PM2_RUNNING=$(pm2 list 2>/dev/null | grep -q "asset-rmg-api.*online" && echo "YES" || echo "NO")
+BACKEND_OK=$(curl -s -o /dev/null -w "%{http_code}" http://localhost:4001/api/departments 2>/dev/null | grep -q "200" && echo "YES" || echo "NO")
 FRONTEND_OK=$([ -f frontend/dist/index.html ] && echo "YES" || echo "NO")
-NGINX_OK=$(systemctl is-active --quiet nginx && echo "YES" || echo "NO")
+NGINX_OK=$(systemctl is-active --quiet nginx 2>/dev/null && echo "YES" || echo "NO")
 
 echo "PM2:        $PM2_RUNNING"
 echo "Backend:    $BACKEND_OK"
