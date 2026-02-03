@@ -199,17 +199,23 @@ export class AssetsService {
       // Get default category if provided
       let defaultCategory: string | undefined
       if (defaultCategoryId) {
-        // Try to find category by slug first
-        const catBySlug = categories.find((c) => c.slug === defaultCategoryId)
+        // Try to find category by slug first (most common case)
+        const catBySlug = categories.find((c) => c.slug === defaultCategoryId || c.slug.toLowerCase() === defaultCategoryId.toLowerCase())
         if (catBySlug) {
           defaultCategory = catBySlug.id
+          console.log(`✅ Found category by slug "${defaultCategoryId}": ${catBySlug.name} (ID: ${catBySlug.id})`)
         } else {
           // Try by ID
           const catById = categories.find((c) => c.id === defaultCategoryId)
           if (catById) {
             defaultCategory = catById.id
+            console.log(`✅ Found category by ID "${defaultCategoryId}": ${catById.name}`)
+          } else {
+            console.log(`⚠️  Category not found: "${defaultCategoryId}". Available categories:`, categories.map(c => ({ slug: c.slug, id: c.id, name: c.name })))
           }
         }
+      } else {
+        console.log('⚠️  No defaultCategoryId provided. Will require "Loại" column or use fallback.')
       }
       // Simple map for quick lookup by name (case-insensitive)
       const deptNameMap = new Map<string, string>()
@@ -397,9 +403,6 @@ export class AssetsService {
               })
               continue
             }
-          } else if (defaultCategory) {
-            // If no category column but default category provided, use it
-            categoryId = defaultCategory
           } else if (defaultCategory) {
             // If no category column but default category provided, use it
             categoryId = defaultCategory
