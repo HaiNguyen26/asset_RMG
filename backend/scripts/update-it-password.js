@@ -1,9 +1,35 @@
 // Script để update password cho tài khoản IT
-require('dotenv').config({ path: require('path').join(__dirname, '../.env') })
+const path = require('path')
+const fs = require('fs')
+
+// Load .env file manually
+const envPath = path.join(__dirname, '../.env')
+if (fs.existsSync(envPath)) {
+  const envContent = fs.readFileSync(envPath, 'utf8')
+  envContent.split('\n').forEach(line => {
+    const [key, ...valueParts] = line.split('=')
+    if (key && valueParts.length > 0) {
+      const value = valueParts.join('=').trim().replace(/^["']|["']$/g, '')
+      process.env[key.trim()] = value
+    }
+  })
+}
+
+// Fallback DATABASE_URL nếu không có trong .env
+if (!process.env.DATABASE_URL) {
+  process.env.DATABASE_URL = 'postgresql://asset_user:Hainguyen261097@localhost:5432/asset_rmg_db'
+}
+
 const { PrismaClient } = require('@prisma/client')
 const bcrypt = require('bcrypt')
 
-const prisma = new PrismaClient()
+const prisma = new PrismaClient({
+  datasources: {
+    db: {
+      url: process.env.DATABASE_URL
+    }
+  }
+})
 
 async function updateITPassword() {
   try {
