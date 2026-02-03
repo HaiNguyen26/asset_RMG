@@ -5,12 +5,15 @@ import { motion, AnimatePresence } from 'framer-motion'
 import { StatusBadge } from '../components/StatusBadge'
 import { AssetFormModal } from '../components/AssetFormModal'
 import { api } from '../services/api'
+import { useAuth } from '../contexts/AuthContext'
 import type { Asset } from '../services/api'
 import type { AssetCategoryId } from '../types'
 
 export function DetailView() {
   const { categoryId, assetId } = useParams<{ categoryId: string; assetId: string }>()
   const navigate = useNavigate()
+  const { user } = useAuth()
+  const isAdmin = user?.role === 'ADMIN'
   const [asset, setAsset] = useState<Asset | null>(null)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState('')
@@ -184,28 +187,35 @@ export function DetailView() {
             </Link>
           </motion.div>
 
-          <div className="flex items-center gap-3">
-            <motion.button
-              type="button"
-              onClick={() => setIsEditModalOpen(true)}
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-              className="flex items-center gap-2 rounded-xl border border-slate-300 bg-white px-4 py-2 text-sm font-semibold text-slate-700 shadow-sm transition-all hover:bg-slate-50"
-            >
-              <Edit className="h-4 w-4" />
-              Sửa đổi
-            </motion.button>
-            <motion.button
-              type="button"
-              onClick={handleDelete}
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-              className="flex items-center gap-2 rounded-xl bg-red-600 px-4 py-2 text-sm font-semibold text-white shadow-sm transition-all hover:bg-red-700"
-            >
-              <Trash2 className="h-4 w-4" />
-              Xóa hồ sơ
-            </motion.button>
-          </div>
+          {isAdmin && (
+            <div className="flex items-center gap-3">
+              <motion.button
+                type="button"
+                onClick={() => setIsEditModalOpen(true)}
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                className="flex items-center gap-2 rounded-xl border border-slate-300 bg-white px-4 py-2 text-sm font-semibold text-slate-700 shadow-sm transition-all hover:bg-slate-50"
+              >
+                <Edit className="h-4 w-4" />
+                Sửa đổi
+              </motion.button>
+              <motion.button
+                type="button"
+                onClick={handleDelete}
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                className="flex items-center gap-2 rounded-xl bg-red-600 px-4 py-2 text-sm font-semibold text-white shadow-sm transition-all hover:bg-red-700"
+              >
+                <Trash2 className="h-4 w-4" />
+                Xóa hồ sơ
+              </motion.button>
+            </div>
+          )}
+          {!isAdmin && (
+            <div className="flex items-center gap-2 rounded-xl border border-slate-200 bg-slate-50 px-4 py-2 text-xs font-semibold text-slate-500">
+              Chế độ xem (Read-only)
+            </div>
+          )}
         </motion.div>
 
         {/* Main Grid Layout (2:1) - Scrollable */}
@@ -368,36 +378,45 @@ export function DetailView() {
                 )}
               </div>
 
-              {/* Action Buttons */}
-              <div className="space-y-3">
-                <motion.button
-                  type="button"
-                  onClick={handleAssign}
-                  disabled={assigning || asset.status === 'IN_USE'}
-                  whileHover={assigning !== true && asset.status !== 'IN_USE' ? { scale: 1.02 } : {}}
-                  whileTap={{ scale: 0.98 }}
-                  className="w-full rounded-xl bg-indigo-600 px-4 py-3 text-sm font-bold text-white shadow-lg transition-all hover:bg-indigo-700 disabled:cursor-not-allowed disabled:opacity-50"
-                >
-                  <div className="flex items-center justify-center gap-2">
-                    <UserPlus className="h-4 w-4" />
-                    {assigning ? 'Đang xử lý...' : 'Cấp phát'}
-                  </div>
-                </motion.button>
+              {/* Action Buttons - Only for Admin */}
+              {isAdmin && (
+                <div className="space-y-3">
+                  <motion.button
+                    type="button"
+                    onClick={handleAssign}
+                    disabled={assigning || asset.status === 'IN_USE'}
+                    whileHover={assigning !== true && asset.status !== 'IN_USE' ? { scale: 1.02 } : {}}
+                    whileTap={{ scale: 0.98 }}
+                    className="w-full rounded-xl bg-indigo-600 px-4 py-3 text-sm font-bold text-white shadow-lg transition-all hover:bg-indigo-700 disabled:cursor-not-allowed disabled:opacity-50"
+                  >
+                    <div className="flex items-center justify-center gap-2">
+                      <UserPlus className="h-4 w-4" />
+                      {assigning ? 'Đang xử lý...' : 'Cấp phát'}
+                    </div>
+                  </motion.button>
 
-                <motion.button
-                  type="button"
-                  onClick={handleReturn}
-                  disabled={returning || asset.status !== 'IN_USE'}
-                  whileHover={returning !== true && asset.status === 'IN_USE' ? { scale: 1.02 } : {}}
-                  whileTap={{ scale: 0.98 }}
-                  className="w-full rounded-xl border-2 border-slate-300 bg-white px-4 py-3 text-sm font-bold text-slate-700 shadow-md transition-all hover:bg-slate-50 disabled:cursor-not-allowed disabled:opacity-50"
-                >
-                  <div className="flex items-center justify-center gap-2">
-                    <RotateCcw className="h-4 w-4" />
-                    {returning ? 'Đang xử lý...' : 'Thu hồi'}
-                  </div>
-                </motion.button>
-              </div>
+                  <motion.button
+                    type="button"
+                    onClick={handleReturn}
+                    disabled={returning || asset.status !== 'IN_USE'}
+                    whileHover={returning !== true && asset.status === 'IN_USE' ? { scale: 1.02 } : {}}
+                    whileTap={{ scale: 0.98 }}
+                    className="w-full rounded-xl border-2 border-slate-300 bg-white px-4 py-3 text-sm font-bold text-slate-700 shadow-md transition-all hover:bg-slate-50 disabled:cursor-not-allowed disabled:opacity-50"
+                  >
+                    <div className="flex items-center justify-center gap-2">
+                      <RotateCcw className="h-4 w-4" />
+                      {returning ? 'Đang xử lý...' : 'Thu hồi'}
+                    </div>
+                  </motion.button>
+                </div>
+              )}
+              {!isAdmin && (
+                <div className="rounded-xl border border-slate-200 bg-slate-50 p-4 text-center">
+                  <p className="text-xs font-medium text-slate-500">
+                    Chỉ IT Admin mới có quyền cấp phát và thu hồi tài sản
+                  </p>
+                </div>
+              )}
             </motion.div>
 
             {/* Timeline */}

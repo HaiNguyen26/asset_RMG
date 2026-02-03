@@ -3,6 +3,7 @@ import { Plus, Laptop, Mouse, Wrench, Clock } from 'lucide-react'
 import { motion } from 'framer-motion'
 import { ASSET_CATEGORIES } from '../types'
 import { ImportExcel } from './ImportExcel'
+import { useAuth } from '../contexts/AuthContext'
 import type { AssetCategoryId } from '../types'
 
 interface HeaderProps {
@@ -20,6 +21,8 @@ const categoryGradients: Record<AssetCategoryId, string> = {
 }
 
 export function Header({ categoryId, onAddAsset, onRefresh }: HeaderProps) {
+  const { user } = useAuth()
+  const isAdmin = user?.role === 'ADMIN'
   const category = ASSET_CATEGORIES.find((c) => c.id === categoryId) ?? ASSET_CATEGORIES[0]
   const Icon = iconMap[category.icon as keyof typeof iconMap] ?? Laptop
   const gradient = categoryGradients[categoryId] || categoryGradients.laptop
@@ -185,29 +188,33 @@ export function Header({ categoryId, onAddAsset, onRefresh }: HeaderProps) {
             </div>
           </motion.div>
 
-          <ImportExcel categoryId={categoryId} onSuccess={onRefresh} />
-          
-          <motion.button
-            type="button"
-            onClick={onAddAsset}
-            whileHover={{ scale: 1.05, boxShadow: '0 10px 25px rgba(0, 0, 0, 0.2)' }}
-            whileTap={{ scale: 0.95 }}
-            className="relative flex items-center gap-2 rounded-2xl bg-gradient-to-r from-slate-900 to-slate-800 px-6 py-2.5 text-sm font-bold text-white shadow-xl shadow-slate-900/30 transition-all hover:from-slate-800 hover:to-slate-700 overflow-hidden group"
-          >
-            {/* Shine effect on hover */}
-            <motion.div
-              className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent"
-              initial={{ x: '-100%' }}
-              whileHover={{ x: '100%' }}
-              transition={{ duration: 0.6 }}
-            />
-            
-            <Plus className="h-4 w-4 relative z-10 group-hover:rotate-90 transition-transform duration-300" />
-            <span className="relative z-10">Thêm tài sản</span>
-            
-            {/* Glow effect */}
-            <div className="absolute inset-0 rounded-2xl bg-white/10 blur-xl opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-          </motion.button>
+          {isAdmin && (
+            <>
+              <ImportExcel categoryId={categoryId} onSuccess={onRefresh} />
+              
+              <motion.button
+                type="button"
+                onClick={onAddAsset}
+                whileHover={{ scale: 1.05, boxShadow: '0 10px 25px rgba(0, 0, 0, 0.2)' }}
+                whileTap={{ scale: 0.95 }}
+                className="relative flex items-center gap-2 rounded-2xl bg-gradient-to-r from-slate-900 to-slate-800 px-6 py-2.5 text-sm font-bold text-white shadow-xl shadow-slate-900/30 transition-all hover:from-slate-800 hover:to-slate-700 overflow-hidden group"
+              >
+                {/* Shine effect on hover */}
+                <motion.div
+                  className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent"
+                  initial={{ x: '-100%' }}
+                  whileHover={{ x: '100%' }}
+                  transition={{ duration: 0.6 }}
+                />
+                
+                <Plus className="h-4 w-4 relative z-10 group-hover:rotate-90 transition-transform duration-300" />
+                <span className="relative z-10">Thêm tài sản</span>
+                
+                {/* Glow effect */}
+                <div className="absolute inset-0 rounded-2xl bg-white/10 blur-xl opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+              </motion.button>
+            </>
+          )}
         </motion.div>
       </div>
     </motion.header>
