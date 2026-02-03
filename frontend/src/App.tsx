@@ -10,9 +10,12 @@ import { RepairHistoryDetailView } from './pages/RepairHistoryDetailView'
 import { PolicyView } from './pages/PolicyView'
 
 function App() {
+  // Get base path from Vite config (for production: /asset_rmg/, for dev: /)
+  const basename = import.meta.env.BASE_URL.replace(/\/$/, '') || '/'
+  
   return (
     <AuthProvider>
-      <BrowserRouter>
+      <BrowserRouter basename={basename}>
         <Routes>
           <Route path="/login" element={<LoginPage />} />
           <Route
