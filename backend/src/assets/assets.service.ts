@@ -596,8 +596,15 @@ export class AssetsService {
               const defaultPassword = 'RMG123@'
               const hashedPassword = await bcrypt.hash(defaultPassword, 10)
               
-              // Generate email from employeesCode if not provided
-              const email = `${empCode.toLowerCase()}@rmg.vn`
+              // Generate email from employeesCode (check if exists first)
+              let email = `${empCode.toLowerCase()}@rmg.vn`
+              const existingUserWithEmail = await this.prisma.user.findUnique({
+                where: { email },
+              })
+              // If email exists, use employeesCode-based unique email
+              if (existingUserWithEmail) {
+                email = `${empCode.toLowerCase()}_${Date.now()}@rmg.vn`
+              }
               
               user = await this.prisma.user.create({
                 data: {
@@ -611,7 +618,7 @@ export class AssetsService {
                 },
                 include: { department: true },
               })
-              console.log(`✅ Created new user ${empCode} with default password RMG123@`)
+              console.log(`✅ Created new user ${empCode} with default password RMG123@ (email: ${email})`)
               if (departmentId) {
                 console.log(`✅ Assigned department to new user ${empCode}: ${departmentId}`)
               }
