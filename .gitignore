@@ -48,7 +48,8 @@ uploads/
 
 # PM2
 .pm2/
-ecosystem.config.js
+# Note: ecosystem.config.js should be committed for deployment
+# ecosystem.config.js
 
 # Temporary files
 tmp/
