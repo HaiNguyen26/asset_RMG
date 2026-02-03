@@ -7,7 +7,18 @@ import { PrismaPg } from '@prisma/adapter-pg'
 export class PrismaService extends PrismaClient implements OnModuleInit, OnModuleDestroy {
   constructor() {
     // Get DATABASE_URL from environment
+    // Try multiple sources: process.env, then dotenv
     let databaseUrl = process.env.DATABASE_URL
+    
+    // If not found, try loading from .env file
+    if (!databaseUrl) {
+      try {
+        require('dotenv').config({ path: require('path').join(__dirname, '../../.env') })
+        databaseUrl = process.env.DATABASE_URL
+      } catch (e) {
+        // Ignore dotenv errors
+      }
+    }
     
     // Remove quotes if present
     if (databaseUrl && typeof databaseUrl === 'string') {
@@ -15,6 +26,9 @@ export class PrismaService extends PrismaClient implements OnModuleInit, OnModul
     }
     
     if (!databaseUrl || typeof databaseUrl !== 'string') {
+      console.error('❌ DATABASE_URL not found. process.env.DATABASE_URL:', process.env.DATABASE_URL)
+      console.error('❌ Current working directory:', process.cwd())
+      console.error('❌ __dirname:', __dirname)
       throw new Error('DATABASE_URL environment variable is not set or invalid')
     }
 
