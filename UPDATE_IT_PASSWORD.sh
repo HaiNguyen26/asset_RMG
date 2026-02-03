@@ -86,10 +86,19 @@ echo ""
 echo "🔧 Generating Prisma Client..."
 npx prisma generate
 
-# Chạy script
+# Chạy script (thử script đơn giản trước)
 echo ""
 echo "🔄 Đang update password..."
-node scripts/update-it-password.js
+
+if [ -f "scripts/update-it-password-simple.js" ]; then
+    echo "   Sử dụng script đơn giản..."
+    DATABASE_URL="postgresql://asset_user:Hainguyen261097@localhost:5432/asset_rmg_db" \
+    node scripts/update-it-password-simple.js
+else
+    echo "   Sử dụng script thông thường..."
+    DATABASE_URL="postgresql://asset_user:Hainguyen261097@localhost:5432/asset_rmg_db" \
+    node scripts/update-it-password.js
+fi
 
 if [ $? -eq 0 ]; then
     echo ""
