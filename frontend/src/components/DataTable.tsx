@@ -1,16 +1,12 @@
-import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { motion } from 'framer-motion'
 import { StatusBadge } from './StatusBadge'
-import { AssetFormModal } from './AssetFormModal'
-import { api } from '../services/api'
 import type { Asset as ApiAsset } from '../services/api'
 import type { AssetCategoryId } from '../types'
 
 interface DataTableProps {
   assets: ApiAsset[]
   categoryId: AssetCategoryId
-  onRefresh?: () => void
 }
 
 const thClass =
@@ -18,7 +14,7 @@ const thClass =
 
 const tdClass = 'px-4 py-3.5 text-slate-600 text-sm whitespace-nowrap'
 
-export function DataTable({ assets, categoryId, onRefresh }: DataTableProps) {
+export function DataTable({ assets, categoryId }: DataTableProps) {
   const navigate = useNavigate()
 
   const handleRowClick = (assetId: string) => {

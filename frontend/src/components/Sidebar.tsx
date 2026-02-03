@@ -1,5 +1,5 @@
 import { Link, useParams, useNavigate, useLocation } from 'react-router-dom'
-import { Laptop, Mouse, Wrench, User, LogOut, LayoutGrid, History, FileText } from 'lucide-react'
+import { Laptop, Mouse, Wrench, User, LogOut, History, FileText } from 'lucide-react'
 import { motion } from 'framer-motion'
 import { useAuth } from '../contexts/AuthContext'
 import { ASSET_CATEGORIES } from '../types'

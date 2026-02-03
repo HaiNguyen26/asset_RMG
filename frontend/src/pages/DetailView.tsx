@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import { useParams, Link, useNavigate } from 'react-router-dom'
-import { ArrowLeft, Edit, Trash2, UserPlus, RotateCcw, Cpu, HardDrive, MapPin, Clock } from 'lucide-react'
+import { ArrowLeft, Edit, Trash2, UserPlus, RotateCcw, Cpu, MapPin, Clock } from 'lucide-react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { StatusBadge } from '../components/StatusBadge'
 import { AssetFormModal } from '../components/AssetFormModal'
@@ -17,7 +17,6 @@ export function DetailView() {
   const [assigning, setAssigning] = useState(false)
   const [returning, setReturning] = useState(false)
   const [isEditModalOpen, setIsEditModalOpen] = useState(false)
-  const [isDeleteConfirmOpen, setIsDeleteConfirmOpen] = useState(false)
 
   useEffect(() => {
     loadAsset()
