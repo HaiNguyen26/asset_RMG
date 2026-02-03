@@ -82,4 +82,4 @@ echo ""
 echo "✅ Hoàn thành!"
 echo ""
 echo "📋 Kiểm tra lại:"
-curl -s http://localhost:4001/api/departments | jq . || curl -s http://localhost:4001/api/departments
+curl -s http://localhost:4001/api/departments || echo "⚠️  Không thể test API"
