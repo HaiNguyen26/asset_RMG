@@ -45,7 +45,7 @@ export function LoginPage() {
             className="flex h-24 w-24 items-center justify-center rounded-2xl overflow-hidden shadow-lg bg-white p-2"
           >
             <img
-              src="/RMG-logo.jpg"
+              src={`${import.meta.env.BASE_URL}RMG-logo.jpg`}
               alt="RMG Logo"
               className="h-full w-full object-contain"
             />

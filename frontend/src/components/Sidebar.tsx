@@ -35,7 +35,7 @@ export function Sidebar() {
           className="flex h-16 w-16 shrink-0 items-center justify-center rounded-xl overflow-hidden shadow-lg shadow-indigo-200"
         >
           <img
-            src="/RMG-logo.jpg"
+            src={`${import.meta.env.BASE_URL}RMG-logo.jpg`}
             alt="RMG Logo"
             className="h-full w-full object-contain"
           />
