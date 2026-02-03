@@ -1,4 +1,5 @@
 // Script để update password cho tài khoản IT
+require('dotenv').config({ path: require('path').join(__dirname, '../.env') })
 const { PrismaClient } = require('@prisma/client')
 const bcrypt = require('bcrypt')
 

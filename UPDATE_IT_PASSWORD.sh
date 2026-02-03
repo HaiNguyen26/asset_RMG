@@ -81,6 +81,11 @@ updateITPassword()
 SCRIPT_EOF
 fi
 
+# Đảm bảo Prisma Client đã generate
+echo ""
+echo "🔧 Generating Prisma Client..."
+npx prisma generate
+
 # Chạy script
 echo ""
 echo "🔄 Đang update password..."
