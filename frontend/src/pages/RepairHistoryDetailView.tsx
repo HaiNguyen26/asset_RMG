@@ -14,6 +14,7 @@ export function RepairHistoryDetailView() {
   const [repair, setRepair] = useState<any>(null)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState('')
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false)
 
   useEffect(() => {
     if (id) {
