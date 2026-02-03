@@ -2,7 +2,7 @@ module.exports = {
   apps: [
     {
       name: 'asset-rmg-api',
-      script: './backend/dist/main.js',
+      script: './backend/dist/src/main.js',
       cwd: '/var/www/asset-rmg',
       // Uncomment và thay path nếu dùng NVM để chỉ định Node.js version cụ thể
       // interpreter: '/root/.nvm/versions/node/v20.18.0/bin/node',
