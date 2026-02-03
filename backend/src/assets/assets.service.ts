@@ -4,6 +4,7 @@ import { CreateAssetDto } from './dto/create-asset.dto'
 import { UpdateAssetDto } from './dto/update-asset.dto'
 import { AssetStatus } from '@prisma/client'
 import * as XLSX from 'xlsx'
+import * as bcrypt from 'bcrypt'
 
 @Injectable()
 export class AssetsService {
@@ -591,21 +592,32 @@ export class AssetsService {
             
             if (!user) {
               // Create user if not exists, assign department if available
+              // Set default password: RMG123@
+              const defaultPassword = 'RMG123@'
+              const hashedPassword = await bcrypt.hash(defaultPassword, 10)
+              
+              // Generate email from employeesCode if not provided
+              const email = `${empCode.toLowerCase()}@rmg.vn`
+              
               user = await this.prisma.user.create({
                 data: {
                   employeesCode: empCode,
                   name: assignedTo || empCode,
+                  password: hashedPassword,
+                  email: email,
                   branch: branch || undefined,
                   departmentId: departmentId || undefined, // Assign department from Excel if available
+                  role: 'USER', // Default role is USER
                 },
                 include: { department: true },
               })
+              console.log(`✅ Created new user ${empCode} with default password RMG123@`)
               if (departmentId) {
                 console.log(`✅ Assigned department to new user ${empCode}: ${departmentId}`)
               }
             } else {
               // Update user if needed
-              const updateData: { branch?: string; departmentId?: string } = {}
+              const updateData: { branch?: string; departmentId?: string; password?: string } = {}
               
               if (branch && user.branch !== branch) {
                 updateData.branch = branch
@@ -615,6 +627,14 @@ export class AssetsService {
               if (departmentId && (!user.departmentId || user.departmentId !== departmentId)) {
                 updateData.departmentId = departmentId
                 console.log(`✅ Updated department for user ${empCode}: ${departmentId}`)
+              }
+              
+              // Set default password if user doesn't have one
+              if (!user.password) {
+                const defaultPassword = 'RMG123@'
+                const hashedPassword = await bcrypt.hash(defaultPassword, 10)
+                updateData.password = hashedPassword
+                console.log(`✅ Set default password RMG123@ for existing user ${empCode}`)
               }
               
               if (Object.keys(updateData).length > 0) {
