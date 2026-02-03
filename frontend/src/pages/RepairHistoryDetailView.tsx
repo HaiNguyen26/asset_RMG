@@ -14,7 +14,6 @@ export function RepairHistoryDetailView() {
   const [repair, setRepair] = useState<any>(null)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState('')
-  const [isEditModalOpen, setIsEditModalOpen] = useState(false)
 
   useEffect(() => {
     if (id) {
@@ -131,7 +130,10 @@ export function RepairHistoryDetailView() {
           <motion.button
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
-            onClick={() => setIsEditModalOpen(true)}
+            onClick={() => {
+              // TODO: Implement edit modal
+              alert('Chức năng sửa đổi đang được phát triển')
+            }}
             className="flex items-center gap-2 rounded-xl border border-indigo-300 bg-indigo-600 px-4 py-2 text-sm font-medium text-white shadow-sm transition-all hover:bg-indigo-700"
           >
             <Edit className="h-4 w-4" />

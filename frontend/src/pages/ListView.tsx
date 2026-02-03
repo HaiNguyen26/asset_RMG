@@ -118,7 +118,7 @@ export function ListView() {
         />
       </motion.div>
       <motion.div variants={itemVariants} className="flex-1 min-h-0 overflow-hidden">
-        <DataTable assets={assets} categoryId={safeCategoryId} onRefresh={loadAssets} />
+        <DataTable assets={assets} categoryId={safeCategoryId} />
       </motion.div>
     </motion.div>
   )
