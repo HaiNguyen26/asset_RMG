@@ -1,3 +1,6 @@
+// Load environment variables from .env file
+require('dotenv').config({ path: require('path').join(__dirname, 'backend', '.env') });
+
 module.exports = {
   apps: [
     {
@@ -13,7 +16,9 @@ module.exports = {
       max_memory_restart: '500M',
       env: {
         NODE_ENV: 'production',
-        PORT: 4001,
+        PORT: process.env.PORT || 4001,
+        DATABASE_URL: process.env.DATABASE_URL,
+        JWT_SECRET: process.env.JWT_SECRET,
       },
       error_file: '/var/log/pm2/asset-rmg-error.log',
       out_file: '/var/log/pm2/asset-rmg-out.log',
