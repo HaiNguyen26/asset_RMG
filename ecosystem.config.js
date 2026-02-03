@@ -1,5 +1,18 @@
 // Load environment variables from .env file
-require('dotenv').config({ path: require('path').join(__dirname, 'backend', '.env') });
+const path = require('path');
+const fs = require('fs');
+const dotenv = require('dotenv');
+
+// Try to load .env file
+const envPath = path.join(__dirname, 'backend', '.env');
+if (fs.existsSync(envPath)) {
+  const envConfig = dotenv.config({ path: envPath });
+  if (envConfig.error) {
+    console.error('Error loading .env file:', envConfig.error);
+  }
+} else {
+  console.warn('Warning: .env file not found at', envPath);
+}
 
 module.exports = {
   apps: [
@@ -17,8 +30,8 @@ module.exports = {
       env: {
         NODE_ENV: 'production',
         PORT: process.env.PORT || 4001,
-        DATABASE_URL: process.env.DATABASE_URL,
-        JWT_SECRET: process.env.JWT_SECRET,
+        DATABASE_URL: process.env.DATABASE_URL || 'postgresql://asset_user:Hainguyen261097@localhost:5432/asset_rmg_db',
+        JWT_SECRET: process.env.JWT_SECRET || 'your_jwt_secret_key_change_in_production_min_32_chars_please_change_this',
       },
       error_file: '/var/log/pm2/asset-rmg-error.log',
       out_file: '/var/log/pm2/asset-rmg-out.log',
