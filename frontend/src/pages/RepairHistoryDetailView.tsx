@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
 import { motion } from 'framer-motion'
-import { ArrowLeft, Edit, Wrench, Building2, Calendar, FileText, CheckCircle, XCircle } from 'lucide-react'
+import { ArrowLeft, Edit } from 'lucide-react'
 import { api } from '../services/api'
 import { useAuth } from '../contexts/AuthContext'
 
@@ -14,7 +14,6 @@ export function RepairHistoryDetailView() {
   const [repair, setRepair] = useState<any>(null)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState('')
-  const [isEditModalOpen, setIsEditModalOpen] = useState(false)
 
   useEffect(() => {
     if (id) {

@@ -2,7 +2,6 @@ import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { motion, AnimatePresence } from 'framer-motion'
 import { useAuth } from '../contexts/AuthContext'
-import { Laptop } from 'lucide-react'
 
 export function LoginPage() {
   const [employeesCode, setEmployeesCode] = useState('')

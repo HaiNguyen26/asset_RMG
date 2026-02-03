@@ -1,15 +1,12 @@
 import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { motion } from 'framer-motion'
-import { Wrench, Building2, Search, Calendar } from 'lucide-react'
+import { Search, Calendar } from 'lucide-react'
 import { api } from '../services/api'
-import { useAuth } from '../contexts/AuthContext'
 import { ASSET_CATEGORIES } from '../types'
 
 export function RepairHistoryListView() {
   const navigate = useNavigate()
-  const { user } = useAuth()
-  const isAdmin = user?.role === 'ADMIN'
 
   const [repairs, setRepairs] = useState<any[]>([])
   const [loading, setLoading] = useState(true)
