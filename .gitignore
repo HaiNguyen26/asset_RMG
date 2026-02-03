@@ -39,7 +39,8 @@ Thumbs.db
 *.sublime-workspace
 
 # Prisma
-**/prisma/migrations/
+# Note: Migrations should be committed to Git
+# **/prisma/migrations/
 
 # Uploads
 uploads/
