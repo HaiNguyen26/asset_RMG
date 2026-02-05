@@ -203,14 +203,64 @@ export function PolicyView() {
               className="rounded-3xl border border-slate-200 bg-white/90 backdrop-blur-sm p-8 shadow-sm h-full"
             >
               <h2 className="mb-6 text-3xl font-bold text-slate-800">{selectedPolicy.title}</h2>
-              <div className="prose prose-slate max-w-none">
+              <div className="prose prose-slate max-w-none prose-headings:font-bold prose-headings:text-slate-800 prose-h2:text-2xl prose-h2:mt-8 prose-h2:mb-4 prose-p:text-slate-700 prose-p:leading-relaxed prose-ul:list-disc prose-ul:pl-6 prose-li:my-2">
                 <div 
-                  className="text-slate-700 leading-relaxed"
+                  className="text-slate-700 leading-relaxed policy-content"
                   dangerouslySetInnerHTML={{ 
                     __html: highlightSearchHTML(selectedPolicy.content, searchQuery) 
                   }}
                 />
               </div>
+              <style>{`
+                .policy-content table {
+                  width: 100%;
+                  border-collapse: collapse;
+                  margin: 1.5rem 0;
+                  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+                }
+                .policy-content table thead {
+                  background-color: #f8fafc;
+                }
+                .policy-content table th {
+                  border: 1px solid #cbd5e1;
+                  padding: 0.75rem 1rem;
+                  text-align: left;
+                  font-weight: 700;
+                  font-size: 0.875rem;
+                  color: #1e293b;
+                }
+                .policy-content table td {
+                  border: 1px solid #cbd5e1;
+                  padding: 0.75rem 1rem;
+                  font-size: 0.875rem;
+                  color: #475569;
+                }
+                .policy-content table tbody tr:nth-child(even) {
+                  background-color: #f8fafc;
+                }
+                .policy-content table tbody tr:hover {
+                  background-color: #f1f5f9;
+                }
+                .policy-content h2 {
+                  margin-top: 2rem;
+                  margin-bottom: 1rem;
+                  font-size: 1.5rem;
+                  font-weight: 700;
+                  color: #1e293b;
+                }
+                .policy-content ul {
+                  margin: 1rem 0;
+                  padding-left: 1.5rem;
+                }
+                .policy-content li {
+                  margin: 0.5rem 0;
+                  line-height: 1.75;
+                }
+                .policy-content strong {
+                  font-weight: 600;
+                  color: #1e293b;
+                }
+              `}</style>
               {isAdmin && (
                 <div className="mt-8 pt-6 border-t border-slate-200">
                   <p className="text-xs text-slate-500">
