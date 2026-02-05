@@ -20,6 +20,7 @@
     "clear-mock-departments": "ts-node scripts/clear-mock-departments.ts",
     "clear-all-data": "ts-node scripts/clear-all-data.ts",
     "clear-all-keep-it": "ts-node scripts/clear-all-keep-it.ts",
+    "add-equipment-policy": "ts-node scripts/add-equipment-assignment-policy.ts",
     "check-user": "ts-node scripts/check-user.ts",
     "test-connection": "ts-node scripts/test-connection.ts",
     "prisma:generate": "prisma generate",

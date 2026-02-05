@@ -80,6 +80,17 @@ export function PolicyView() {
     )
   }
 
+  const highlightSearchHTML = (html: string, query: string): string => {
+    if (!query.trim()) return html
+    // Only highlight in text content, not in HTML tags
+    return html.replace(
+      new RegExp(`(?![^<]*>)([^<]*?)(${query})([^<]*?)(?![^<]*>)`, 'gi'),
+      (match, before, found, after) => {
+        return `${before}<mark class="bg-yellow-200 rounded px-1">${found}</mark>${after}`
+      }
+    )
+  }
+
   if (loading) {
     return (
       <div className="flex items-center justify-center py-12">
@@ -193,9 +204,12 @@ export function PolicyView() {
             >
               <h2 className="mb-6 text-3xl font-bold text-slate-800">{selectedPolicy.title}</h2>
               <div className="prose prose-slate max-w-none">
-                <div className="text-slate-700 whitespace-pre-wrap leading-relaxed">
-                  {highlightSearch(selectedPolicy.content, searchQuery)}
-                </div>
+                <div 
+                  className="text-slate-700 leading-relaxed"
+                  dangerouslySetInnerHTML={{ 
+                    __html: highlightSearchHTML(selectedPolicy.content, searchQuery) 
+                  }}
+                />
               </div>
               {isAdmin && (
                 <div className="mt-8 pt-6 border-t border-slate-200">
